@@ -1,0 +1,18 @@
+{
+  "name": "unitecbot",
+  "version": "1.0.0",
+  "description": "Unitec Bot for website",
+    "main": "index.js",
+    "engines": {
+        "node": "10.15.3",
+            "npm": "6.4.1"
+    },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Mukesh Shrestha",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
