@@ -13,6 +13,27 @@ const sessionClient = new dialogflow.SessionsClient({projectID, credentials});
 const sessionPath = sessionClient.sessionPath(config.googleProjectID, config.dialogFlowSessionID);
 
 module.exports = {
+    textQuery: async function (text, parameters = {}) {
+        let self = module.exports;
+        const request = {
+            session: sessionPath,
+            queryInput: {
+                text: {
+                    text: text,
+                    languageCode: config.dialogFlowSessionLanguageCode,
+                },
+            },
+            queryParams: {
+                payload: {
+                    data: parameters
+                }
+            }
+        };
+        let responses = await sessionClient.detectIntent(request);
+        responses = await self.handleAction(responses);
+        return responses;
+    },
+
     eventQuery: async function (event, parameters = {}) {
         let self = module.exports;
         const request = {
@@ -23,12 +44,8 @@ module.exports = {
                     parameters: structjsnon.jsonToStructProto(parameters),
                     languageCode: config.dialogFlowSessionLanguageCode,
                 },
-            },
-            queryParams: {
-                payload: {
-                    data: parameters
-                }
             }
+          
         };
         let responses = await sessionClient.detectIntent(request);
         responses = await self.handleAction(responses);
