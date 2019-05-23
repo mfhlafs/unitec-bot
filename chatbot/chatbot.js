@@ -1,26 +1,30 @@
 ﻿'use strict'
 const dialogflow = require('dialogflow');
-const structjsnon = require('./structjson')
+const structjsnon = require('./structjson.js')
 const config = require('../config/keys');
 
-const projectID = config.googleProjectID;
+const projectId = config.googleProjectID;
+const sessionId = config.dialogFlowSessionID;
+const languageCode = config.dialogFlowSessionLanguageCode;
+
 const credentials = {
     client_email: config.googleClientEmail,
-    private_key: config.googlePrivateKey
+    private_key: config.googlePrivateKey,
 };
 
-const sessionClient = new dialogflow.SessionsClient({projectID, credentials});
-const sessionPath = sessionClient.sessionPath(config.googleProjectID, config.dialogFlowSessionID);
+const sessionClient = new dialogflow.SessionsClient({projectId, credentials});
+const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
 module.exports = {
-    textQuery: async function (text, parameters = {}) {
+    textQuery: async function (text, userID, parameters = {}) {
+        let sessionPath = sessionClient.sessionPath(projectId, sessionId + userID);
         let self = module.exports;
         const request = {
             session: sessionPath,
             queryInput: {
                 text: {
                     text: text,
-                    languageCode: config.dialogFlowSessionLanguageCode,
+                    languageCode: languageCode,
                 },
             },
             queryParams: {
@@ -34,15 +38,16 @@ module.exports = {
         return responses;
     },
 
-    eventQuery: async function (event, parameters = {}) {
+    eventQuery: async function (event, userID, parameters = {}) {
         let self = module.exports;
+        let sessionPath = sessionClient.sessionPath(projectId, sessionId + userID);
         const request = {
             session: sessionPath,
             queryInput: {
                 event: {
                     name: event,
                     parameters: structjsnon.jsonToStructProto(parameters),
-                    languageCode: config.dialogFlowSessionLanguageCode,
+                    languageCode: languageCode,
                 },
             }
           
@@ -54,5 +59,5 @@ module.exports = {
 
     handleAction: function (responses) {
         return responses;
-    }
+    },
 }
