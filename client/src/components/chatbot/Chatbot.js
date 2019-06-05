@@ -25,48 +25,77 @@ class Chatbot extends Component {
         console.log(cookies.get('userID'));
     }
 
-    async df_text_query(queryText) {
+    async df_text_query(text) {
         let msg;
         let says = {
             speaks: 'me',
             msg: {
                 text: {
-                    text: queryText
+                    text: text
                 }
             }
         };
 
         this.setState({ messages: [...this.state.messages, says] });
+        try {
+            const res = await axios.post('/api/df_text_query', { text: text, userID: cookies.get('userID') });
 
-        const res = await axios.post('/api/df_text_query', {text: queryText, userID: cookies.get('userID')});
-
-        if (res.data.fulfillmentMessages) {
-            for (let i = 0; i < res.data.fulfillmentMessages.length; i++) {
-                msg = res.data.fulfillmentMessages[i];
+            for (let msg of res.data.fulfillmentMessages) {
                 says = {
                     speaks: 'bot',
                     msg: msg
                 }
                 this.setState({ messages: [...this.state.messages, says] });
+
             }
+        } catch (e) {
+            says = {
+                speaks: 'bot',
+                msg: {
+                    text: {
+                        text: "I am having troubles. I need to terminate. Will be back later"
+                    }
+                }
+            }
+            this.setState({ messages: [...this.state.messages, says] });
+            let that = this;
+            setTimeout(function () {
+                that.setState({ showBot: false })
+            }, 2000);
         }
+        
+
+       
 
     };
-    async df_event_query(eventName) {
-        const res = await axios.post('/api/df_event_query', {event: eventName, userID: cookies.get('userID')});
-        let msg, says = {};
-        if (res.data.fulfillmentMessages) {
-            for (let i = 0; i < res.data.fulfillmentMessages.length; i++) {
-                msg = res.data.fulfillmentMessages[i];
+    async df_event_query(event) {
+        try {
+            const res = await axios.post('/api/df_event_query', { event: event, userID: cookies.get('userID') });
+
+            for (let msg of res.data.fulfillmentMessages) {
                 let says = {
                     speaks: 'bot',
                     msg: msg
                 }
                 this.setState({ messages: [...this.state.messages, says] });
-            }
-        }
 
-    }
+            }
+        } catch (e) {
+            let says = {
+                speaks: 'bot',
+                msg: {
+                    text: {
+                        text: "I am having troubles. I need to terminate. Will be back later"
+                    }
+                }
+            }
+            this.setState({ messages: [...this.state.messages, says] });
+            let that = this;
+            setTimeout(function () {
+                that.setState({ showBot: false })
+            }, 2000);
+        }
+    };
 
     componentDidMount() {
         this.df_event_query('Welcome');
@@ -147,7 +176,7 @@ class Chatbot extends Component {
 
                     <div className=" col s12" >
 
-                        <input style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} ref={(input) => { this.talkInput = input; }} placeholder="type a message:" onKeyPress={this._handleInputKeyPress} id="user_says" type="text" />
+                        <input style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} ref={(input) => { this.talkInput = input; }} placeholder="Type a message:" onKeyPress={this._handleInputKeyPress} id="user_says" type="text" />
 
                     </div>
 
