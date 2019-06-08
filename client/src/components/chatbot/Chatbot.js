@@ -137,83 +137,44 @@ class Chatbot extends Component {
     render() {
 
         if (this.state.showBot) {
-
             return (
-
                 <div style={{ minHeight: 500, maxHeight: 470, width: 400, position: 'absolute', bottom: 0, right: 0, border: '1px solid lightgray' }}>
-
                     <nav>
-
                         <div className="nav-wrapper">
-
-                            <a className="brand-logo">ChatBot</a>
-
+                            <a href="#" className="brand-logo">ChatBot</a>
                             <ul id="nav-mobile" className="right hide-on-med-and-down">
-
                                 <li><a onClick={this.hide}>Close</a></li>
-
                             </ul>
-
                         </div>
-
                     </nav>
-
-
-
                     <div id="chatbot" style={{ minHeight: 388, maxHeight: 388, width: '100%', overflow: 'auto' }}>
-
-
-
                         {this.renderMessages(this.state.messages)}
-
                         <div ref={(el) => { this.messagesEnd = el; }}
-
                             style={{ float: "left", clear: "both" }}>
-
                         </div>
-
                     </div>
-
                     <div className=" col s12" >
-
                         <input style={{ margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%' }} ref={(input) => { this.talkInput = input; }} placeholder="Type a message:" onKeyPress={this._handleInputKeyPress} id="user_says" type="text" />
 
                     </div>
-
-
-
                 </div>
 
             );
 
         } else {
-
             return (
-
                 <div style={{ minHeight: 40, maxHeight: 500, width: 400, position: 'absolute', bottom: 0, right: 0, border: '1px solid lightgray' }}>
-
                     <nav>
-
                         <div className="nav-wrapper">
-
-                            <a className="brand-logo">ChatBot</a>
-
+                            <a href="#" className="brand-logo">ChatBot</a>
                             <ul id="nav-mobile" className="right hide-on-med-and-down">
-
                                 <li><a onClick={this.show}>Show</a></li>
-
                             </ul>
-
                         </div>
-
                     </nav>
-
                     <div ref={(el) => { this.messagesEnd = el; }}
-
                         style={{ float: "left", clear: "both" }}>
-
                     </div>
-
                 </div>
 
             );
