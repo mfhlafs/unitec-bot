@@ -15,6 +15,7 @@ const Message = (props) => (
                 <div className="col s10">
                     <span className="black-text">
                         {props.text}
+                       
                     </span>
 
 

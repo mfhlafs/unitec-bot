@@ -3,6 +3,7 @@ import axios from 'axios/index';
 import Cookies from 'universal-cookie';
 import { v4 as uuid } from 'uuid';
 import Message from './Message';
+import Card from './Card';
 
 const cookies = new Cookies();
 class Chatbot extends Component {
@@ -63,9 +64,9 @@ class Chatbot extends Component {
                 that.setState({ showBot: false })
             }, 2000);
         }
-        
 
-       
+
+
 
     };
     async df_event_query(event) {
@@ -105,7 +106,7 @@ class Chatbot extends Component {
         this.messagesEnd.scrollIntoView({ behaviour: "smooth" });
         if (this.talkInput) {
             this.talkInput.focus();
-        } 
+        }
 
     }
     show(event) {
@@ -118,15 +119,46 @@ class Chatbot extends Component {
         event.stopPropagation();
         this.setState({ showBot: false });
     }
+    renderCards(cards) {
+        return cards.map((card, i) => <Card key={i} payload={card.structValue} />);
+    }
+    renderOneMessage(message, i) {
+        if (message.msg && message.msg.text && message.msg.text.text) {
+            return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />;
+
+        } else if (message.msg && message.msg.payload && message.msg.payload.fields && message.msg.payload.fields.cards) {
+            return <div key={i}>
+                <div className="card-panel grey lighten-5 z-depth-1">
+
+                    
+
+                    <div style={{ height: 50, width: message.msg.payload.fields.cards.listValue.values.length * 150, 'textAlign': 'center' }}>
+                                {this.renderCards(message.msg.payload.fields.cards.listValue.values)}
+                            </div>
+                       
+                        
+
+
+
+
+                  
+                </div>
+            </div>
+        }
+    }
+
+
+
     renderMessages(stateMessages) {
         if (stateMessages) {
             return stateMessages.map((message, i) => {
-                return <Message key={i} speaks={message.speaks} text={message.msg.text.text} />;
+                return this.renderOneMessage(message, i);
             });
+
         } else {
             return null;
         }
-        
+
     }
     _handleInputKeyPress(e) {
         if (e.key === 'Enter') {
@@ -138,14 +170,20 @@ class Chatbot extends Component {
 
         if (this.state.showBot) {
             return (
+
+
                 <div style={{ minHeight: 500, maxHeight: 470, width: 400, position: 'absolute', bottom: 0, right: 0, border: '1px solid lightgray' }}>
+
                     <nav>
                         <div className="nav-wrapper">
+
                             <a href="#" className="brand-logo">ChatBot</a>
                             <ul id="nav-mobile" className="right hide-on-med-and-down">
                                 <li><a onClick={this.hide}>Close</a></li>
                             </ul>
+
                         </div>
+
                     </nav>
                     <div id="chatbot" style={{ minHeight: 388, maxHeight: 388, width: '100%', overflow: 'auto' }}>
                         {this.renderMessages(this.state.messages)}
@@ -180,6 +218,7 @@ class Chatbot extends Component {
             );
 
         }
+
 
     }
 
