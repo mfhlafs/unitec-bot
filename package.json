@@ -19,10 +19,10 @@
   "dependencies": {
     "@google-cloud/storage": "^2.5.0",
     "actions-on-google": "^2.7.0",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "dialogflow": "^0.9.0",
     "dialogflow-fulfillment": "^0.6.1",
-    "express": "^4.16.4"
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
